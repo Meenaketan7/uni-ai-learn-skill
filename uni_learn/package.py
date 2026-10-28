@@ -94,7 +94,8 @@ def build_bytes():
         return archive.read_bytes()
     target = io.BytesIO()
     with zipfile.ZipFile(target, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as package:
-        entries = [(name, (ROOT / name).read_bytes()) for name in _source_files()]
+        # Every allowlisted resource is text. Keep archives identical across checkouts.
+        entries = [(name, (ROOT / name).read_bytes().replace(b"\r\n", b"\n")) for name in _source_files()]
         entries.append(("__main__.py", b"from uni_learn.__main__ import main\nraise SystemExit(main())\n"))
         for name, content in sorted(entries):
             info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))

@@ -47,6 +47,17 @@ def dispatcher_artifact(result, ident="learn-hint"):
 
 
 class ContractTests(unittest.TestCase):
+    def test_crlf_templates_render_identically(self):
+        profile = "cursor"
+        expected = adapters.render(profile, context(profile))
+
+        def windows_resource(name):
+            return read_resource(name).replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+
+        with patch.object(adapters, "read_resource", side_effect=windows_resource):
+            actual = adapters.render(profile, context(profile))
+        self.assertEqual(actual, expected)
+
     def test_all_profiles_render_without_writes(self):
         registry = read_json("registry/adapters.json")
         self.assertEqual(len(registry["profiles"]), 12)
@@ -83,6 +94,9 @@ class ContractTests(unittest.TestCase):
                 command = dispatcher_artifact(result)["content"]
                 if profile == "gemini-cli":
                     command = tomllib.loads(command)["prompt"]
+                for example in re.findall(r"`([^`]+)`", command):
+                    if example.startswith(fixture["runtime_command"] + " "):
+                        self.assertNotIn("\n", example, (profile, example))
                 self.assertNotIn("--project .", command)
                 self.assertIn("state show --project " + project_arg, command)
                 self.assertIn("task start --project " + project_arg, command)

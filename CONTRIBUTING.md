@@ -21,6 +21,9 @@ learning gates, checkpoints, recall, and release distribution.
 Package files are allowlisted. Tests, documentation, credentials, local editor
 settings, graph output, and caches must stay out of the runtime archive. A second
 build from unchanged inputs must produce identical bytes.
+Source files use LF line endings. Package builds also normalize CRLF in source
+resources so archives remain reproducible across checkouts. Keep existing user
+instructions in their original newline style when merging or removing a block.
 
 ## Release builds
 

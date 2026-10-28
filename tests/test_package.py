@@ -9,6 +9,7 @@ import time
 import unittest
 import zipfile
 from pathlib import Path
+from unittest.mock import patch
 from uni_learn import package
 from tests.test_registry import NOW, model
 
@@ -43,6 +44,16 @@ class PackageTests(unittest.TestCase):
             self.assertIn("core/learning/workflow.md", archive.namelist())
             self.assertTrue(all(info.date_time == (1980, 1, 1, 0, 0, 0) for info in archive.infolist()))
             self.assertFalse(any(name.startswith(("tests/", "docs/", ".codex/")) or "__pycache__" in name for name in archive.namelist()))
+
+    def test_crlf_checkout_builds_the_same_runtime(self):
+        tree = self.root / "windows checkout"
+        for name in package._source_files():
+            target = tree / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            source = (package.ROOT / name).read_bytes().replace(b"\r\n", b"\n")
+            target.write_bytes(source.replace(b"\n", b"\r\n"))
+        with patch.object(package, "ROOT", tree):
+            self.assertEqual(package.build_bytes(), self.archive.read_bytes())
 
     def test_runs_and_renders_outside_checkout_without_pythonpath(self):
         result = self.run_cli("--help")

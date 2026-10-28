@@ -116,9 +116,9 @@ class UpdateTests(unittest.TestCase):
         updates.configure(True, application_roots=self.roots)
         notice = updates.notification(project=str(self.project), application_roots=self.roots, fetch=fetch, now=2000)
         self.assertEqual(notice["status"], "available")
-        self.assertIn(" update --receipt ", notice["command"])
         command_args = notice["command_argv"]
         self.assertEqual(command_args[1:3], ["-m", "uni_learn"])
+        self.assertEqual(command_args[3:6], ["update", "--receipt", receipt])
         if os.name != "nt":
             self.assertEqual(shlex.split(notice["command"]), command_args)
         before = json.loads(Path(receipt).read_text("utf-8"))

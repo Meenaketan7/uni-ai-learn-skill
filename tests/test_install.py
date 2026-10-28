@@ -45,6 +45,28 @@ class DryRunTests(InstallFixture, unittest.TestCase):
                 self.assertEqual(plan["skill_conflicts"][0]["name"], "learn-hint")
                 self.assertEqual(foreign.read_text().splitlines()[-1], "Keep me.")
 
+    def test_crlf_native_skill_frontmatter_blocks_alias_before_writes(self):
+        foreign = self.project / ".agents/skills/user-alias/SKILL.md"
+        foreign.parent.mkdir(parents=True)
+        original = b"---\r\nname: 'learn-hint'\r\ndescription: user skill\r\n---\r\nKeep me.\r\n"
+        foreign.write_bytes(original)
+        render = install.render
+
+        def crlf_native_frontmatter(profile, context):
+            result = render(profile, context)
+            for artifact in result["artifacts"]:
+                if artifact["role"] == "command":
+                    artifact["content"] = artifact["content"].replace("\n", "\r\n")
+            return result
+
+        before = self.inventory()
+        with patch("uni_learn.install.render", side_effect=crlf_native_frontmatter):
+            plan = self.plan()
+        self.assertEqual(plan["status"], "blocked")
+        self.assertEqual(plan["skill_conflicts"][0]["name"], "learn-hint")
+        self.assertEqual(foreign.read_bytes(), original)
+        self.assertEqual(self.inventory(), before)
+
     def test_complex_yaml_names_require_manual_collision_review(self):
         for declaration in ("name: >-\n  learn-hint", "name: |\n  learn-hint",
                             'name: "learn\\u002dhint"', '"name": learn-hint',
@@ -133,6 +155,48 @@ class DryRunTests(InstallFixture, unittest.TestCase):
         with self.assertRaisesRegex(ContractError, "frontmatter"):
             self.plan("cursor")
         self.assertEqual(entry.read_text(), original)
+
+    def test_crlf_cursor_frontmatter_is_recognized_and_user_bytes_are_preserved(self):
+        entry = self.project / ".cursor/rules/uni-learn.mdc"
+        entry.parent.mkdir(parents=True)
+        original = (b"---\r\ndescription: Uni Learn efficiency and preference dispatch\r\n"
+                    b"alwaysApply: true\r\n---\r\nUser rule stays CRLF.\r\n")
+        entry.write_bytes(original)
+        render = install.render
+
+        def crlf_cursor_frontmatter(profile, context):
+            result = render(profile, context)
+            for artifact in result["artifacts"]:
+                if artifact["role"] == "persistent":
+                    artifact["content"] = artifact["content"].replace("\n", "\r\n")
+            return result
+
+        with patch("uni_learn.install.render", side_effect=crlf_cursor_frontmatter):
+            proposal = self.plan("cursor")["manual_patches"][0]["content"]
+        self.assertTrue(proposal.startswith("---\r\ndescription: Uni Learn efficiency and preference dispatch\r\n"
+                                            "alwaysApply: true\r\n---\r\n"))
+        self.assertIn("User rule stays CRLF.\r\n", proposal)
+        self.assertIn("<!-- uni-learn:cursor -->", proposal)
+        self.assertEqual(entry.read_bytes(), original)
+
+    def test_crlf_cursor_frontmatter_mismatch_requires_manual_merge(self):
+        entry = self.project / ".cursor/rules/uni-learn.mdc"
+        entry.parent.mkdir(parents=True)
+        original = b"---\r\nalwaysApply: false\r\n---\r\nUser rule\r\n"
+        entry.write_bytes(original)
+        render = install.render
+
+        def crlf_cursor_frontmatter(profile, context):
+            result = render(profile, context)
+            for artifact in result["artifacts"]:
+                if artifact["role"] == "persistent":
+                    artifact["content"] = artifact["content"].replace("\n", "\r\n")
+            return result
+
+        with patch("uni_learn.install.render", side_effect=crlf_cursor_frontmatter):
+            with self.assertRaisesRegex(ContractError, "frontmatter"):
+                self.plan("cursor")
+        self.assertEqual(entry.read_bytes(), original)
 
 
 class ApplyTests(InstallFixture, unittest.TestCase):
@@ -318,16 +382,16 @@ class VerifiedBudgetTests(InstallFixture, unittest.TestCase):
 
     def test_existing_user_imports_cannot_be_certified_by_file_count(self):
         entry = self.project / "AGENTS.md"
-        original = "@large-always-loaded.md\nUser rules\n"
-        entry.write_text(original)
+        original = b"@large-always-loaded.md\r\nUser rules\r\n"
+        entry.write_bytes(original)
         with self.counter():
             plan = self.checked_plan()
         action = next(row for row in plan["actions"] if row["role"] == "persistent")
         self.assertEqual(action["action"], "manual_patch")
         self.assertEqual(action["budget"]["status"], "unverified")
         self.assertEqual(action["budget"]["file_measurement"]["tokens"], 250)
-        self.assertIn(original, action["manual_content"])
-        self.assertEqual(entry.read_text(), original)
+        self.assertIn(original.decode("utf-8"), action["manual_content"])
+        self.assertEqual(entry.read_bytes(), original)
 
     def test_reviewed_counter_measurement_is_part_of_digest(self):
         with self.counter(250):
@@ -368,6 +432,34 @@ class CrashRecoveryTests(InstallFixture, unittest.TestCase):
 
 
 class AutomaticSetupTests(InstallFixture, unittest.TestCase):
+    def test_existing_instructions_without_final_newline_round_trip(self):
+        home, codex_home = self.user_paths()
+        entry = codex_home / "AGENTS.md"
+        for original in (b"First\r\nLast", b"First\nLast"):
+            with self.subTest(original=original):
+                entry.write_bytes(original)
+                result = install.setup("codex", application_roots=self.roots,
+                                       user_home=home, codex_home=codex_home)
+                removal = install.plan_uninstall(result["receipt"], application_roots=self.roots)
+                install.apply_uninstall(result["receipt"], removal["plan_digest"], application_roots=self.roots)
+                self.assertEqual(entry.read_bytes(), original)
+
+    def test_cursor_header_only_uses_existing_crlf_for_owned_block(self):
+        entry = self.project / ".cursor/rules/uni-learn.mdc"
+        entry.parent.mkdir(parents=True)
+        original = (b"---\r\ndescription: Uni Learn efficiency and preference dispatch\r\n"
+                    b"alwaysApply: true\r\n---\r\n")
+        entry.write_bytes(original)
+        result = install.setup("cursor", self.project, application_roots=self.roots)
+        content = entry.read_bytes()
+        self.assertNotIn(b"\n", content.replace(b"\r\n", b""))
+        rewritten = content.decode("utf-8").replace("\r\n", "\n").replace("\n", "\r\n")
+        entry.write_bytes(rewritten.encode("utf-8"))
+        install.setup("cursor", self.project, application_roots=self.roots)
+        removal = install.plan_uninstall(result["receipt"], application_roots=self.roots)
+        install.apply_uninstall(result["receipt"], removal["plan_digest"], application_roots=self.roots)
+        self.assertEqual(entry.read_bytes(), original)
+
     def user_paths(self):
         home = self.root / "user home"
         home.mkdir()
@@ -378,8 +470,8 @@ class AutomaticSetupTests(InstallFixture, unittest.TestCase):
     def test_one_call_global_setup_and_block_only_removal(self):
         home, codex_home = self.user_paths()
         entry = codex_home / "AGENTS.md"
-        original = "My own instructions."
-        entry.write_text(original)
+        original = b"My own instructions.\r\n"
+        entry.write_bytes(original)
         options = {"application_roots": self.roots, "user_home": home, "codex_home": codex_home}
         result = install.setup("codex", **options)
         self.assertEqual(result["status"], "ready")
@@ -387,19 +479,22 @@ class AutomaticSetupTests(InstallFixture, unittest.TestCase):
         self.assertEqual(set(result["commands"]), {"learn", "learn-hint", "learn-debug",
                                                     "learn-review", "learn-design", "learn-recall", "learn-compact"})
         self.assertTrue((home / ".agents/skills/learn/SKILL.md").is_file())
-        self.assertIn("My own instructions.", entry.read_text())
-        self.assertEqual(entry.read_text().count("<!-- uni-learn:codex -->"), 1)
+        self.assertIn(b"My own instructions.", entry.read_bytes())
+        self.assertEqual(entry.read_bytes().count(b"<!-- uni-learn:codex -->"), 1)
         receipt = json.loads(Path(result["receipt"]).read_text())
         self.assertEqual(receipt["scope"], "user")
         self.assertEqual(next(row["kind"] for row in receipt["owned"]
                               if row["path"] == str(entry.resolve())), "block")
-        entry.write_text(entry.read_text() + "\nMore user instructions.\n")
+        # Windows text-mode edits normalize every line in the file to CRLF.
+        rewritten = entry.read_bytes().decode("utf-8").replace("\r\n", "\n")
+        rewritten = (rewritten + "\nMore user instructions.\n").replace("\n", "\r\n")
+        entry.write_bytes(rewritten.encode("utf-8"))
         install.setup("codex", **options)
-        self.assertEqual(entry.read_text().count("<!-- uni-learn:codex -->"), 1)
+        self.assertEqual(entry.read_bytes().count(b"<!-- uni-learn:codex -->"), 1)
         removal = install.plan_uninstall(result["receipt"], application_roots=self.roots)
         self.assertEqual(removal["status"], "ready")
         install.apply_uninstall(result["receipt"], removal["plan_digest"], application_roots=self.roots)
-        self.assertEqual(entry.read_text(), original + "\nMore user instructions.\n")
+        self.assertEqual(entry.read_bytes(), original + b"\r\nMore user instructions.\r\n")
 
     def test_existing_override_is_selected_without_touching_agents(self):
         home, codex_home = self.user_paths()

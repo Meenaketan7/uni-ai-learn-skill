@@ -17,8 +17,7 @@ before requesting a hint; do not ask the learner to repeat it.
 Reuse that task through corrections; a different objective
 gets a new task. Substitute actual IDs and pass user text as a single argv value.
 
-Invoke `${runtime_command} learn --project ${project_arg} --session SESSION_ID --task TASK_ID
---command ${id} --argument TEXT --json`. Use the actual user argument, including
+Invoke `${runtime_command} learn --project ${project_arg} --session SESSION_ID --task TASK_ID --command ${id} --argument TEXT --json`. Use the actual user argument, including
 an adequate existing attempt. Follow the returned action and open only the returned
 shared resource paths below the installed resource root. The canonical selected
 body is `${body}`. Select one relevant domain pack when learning is active.

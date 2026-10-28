@@ -74,7 +74,7 @@ def _record(path):
             raise ContractError("invalid managed block hash")
         if entry.get("kind") == "block" and entry.get("block_profile", value.get("profile")) != value.get("profile"):
             raise ContractError("managed block profile mismatch")
-        if entry.get("kind") == "block" and entry.get("prefix_added", "") not in {"", "\n"}:
+        if entry.get("kind") == "block" and entry.get("prefix_added", "") not in {"", "\n", "\r\n"}:
             raise ContractError("invalid managed block prefix")
     return value
 
@@ -220,25 +220,37 @@ def _marker_content(prior, entry, profile):
     # An incompatible existing header needs a human merge; silently picking one
     # could change whether the host loads the entire file.
     header = ""
-    if entry.startswith("---\n"):
-        match = re.fullmatch(r"(---\n.*?\n---(?:\n|$))(.*)", entry, re.DOTALL)
-        if not match:
-            raise ContractError("unterminated persistent instruction frontmatter")
-        header, entry = match.groups()
-        if prior.startswith(("---\n", "---\r\n")):
-            existing = re.fullmatch(r"(---(?:\r?\n).*?(?:\r?\n)---(?:(?:\r?\n)|$))(.*)", prior, re.DOTALL)
-            if not existing or existing.group(1).replace("\r\n", "\n") != header:
+    entry_frontmatter = _frontmatter(entry)
+    if entry_frontmatter is not None:
+        header, entry = entry_frontmatter
+        existing_frontmatter = _frontmatter(prior)
+        if existing_frontmatter is not None:
+            existing_header, existing_body = existing_frontmatter
+            if existing_header.replace("\r\n", "\n") != header.replace("\r\n", "\n"):
                 raise ContractError("incompatible existing persistent instruction frontmatter; merge manually")
-            header = existing.group(1)
-            prior = existing.group(2)
+            header = existing_header
+            prior = existing_body
     start, end = "<!-- uni-learn:" + profile + " -->", "<!-- /uni-learn:" + profile + " -->"
-    block = start + "\n" + entry.rstrip() + "\n" + end + "\n"
+    newline = "\r\n" if "\r\n" in header + prior else "\n"
+    entry = entry.replace("\r\n", "\n").replace("\n", newline)
+    block = start + newline + entry.rstrip() + newline + end + newline
     if start in prior or end in prior:
         if prior.count(start) != 1 or prior.count(end) != 1 or prior.index(end) < prior.index(start):
             raise ContractError("ambiguous existing Uni Learn instruction block")
         old = _managed_block(prior, profile)
         return header + prior[:old[0]] + block + prior[old[1]:]
-    return header + prior + ("\n" if prior and not prior.endswith("\n") else "") + block
+    return header + prior + (newline if prior and not prior.endswith(("\n", "\r")) else "") + block
+
+
+def _frontmatter(content):
+    """Return an exact frontmatter prefix and body, accepting LF or CRLF."""
+    lines = content.splitlines(keepends=True)
+    if not lines or lines[0].rstrip("\r\n") != "---":
+        return None
+    for index, line in enumerate(lines[1:], 1):
+        if line.rstrip("\r\n") == "---":
+            return "".join(lines[:index + 1]), "".join(lines[index + 1:])
+    raise ContractError("unterminated persistent instruction frontmatter")
 
 
 def _managed_block(content, profile):
@@ -269,9 +281,9 @@ def _managed_entry(path, content, profile, *, created=False, prefix_added=""):
 
 def _declared_skill_name(content):
     """Return (safe name, ambiguous syntax) for a small YAML scalar subset."""
-    if not content.startswith("---\n"):
-        return None, False
     lines = content.splitlines()
+    if not lines or lines[0] != "---":
+        return None, False
     try:
         closing = lines.index("---", 1)
     except ValueError:
@@ -645,7 +657,7 @@ def apply_install(profile, project, plan_digest, *, application_roots=None, gene
                     before_block = desired_text[:_managed_block(desired_text, profile)[0]]
                     if before_block.startswith(old_text):
                         prefix_added = before_block[len(old_text):]
-                    if prefix_added not in {"", "\n"}:
+                    if prefix_added not in {"", "\n", "\r\n"}:
                         raise ContractError("unexpected managed block prefix")
                 def before_commit(file_id, staging, backup=None):
                     prepared = {"path": str(path), "sha256": action["desired_sha256"],

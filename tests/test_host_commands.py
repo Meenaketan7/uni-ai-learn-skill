@@ -14,11 +14,13 @@ class NativeSkillAliasTests(InstallFixture, unittest.TestCase):
         foreign.parent.mkdir(parents=True)
         for name in ("uni-learn", '"uni-learn"', "'uni-learn'"):
             with self.subTest(name=name):
-                foreign.write_text(f"---\nname: {name}\n---\nUser content.\n", encoding="utf-8")
+                original = f"---\r\nname: {name}\r\n---\r\nUser content.\r\n".encode("utf-8")
+                foreign.write_bytes(original)
                 before = self.inventory()
                 with self.assertRaises(ConflictError):
                     install.setup("antigravity", self.project, application_roots=self.roots)
                 self.assertEqual(self.inventory(), before)
+                self.assertEqual(foreign.read_bytes(), original)
 
     def test_runtime_identifier_is_not_a_native_name_collision(self):
         foreign = self.project / ".agents/skills/personal/SKILL.md"

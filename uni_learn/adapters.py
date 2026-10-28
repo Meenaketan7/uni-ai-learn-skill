@@ -58,7 +58,7 @@ def render_spec(context, read_resource_fn, spec):
     values_base = {"profile": spec["profile"], "runtime_path": context["runtime_path"],
                    "resource_root": context["resource_root"], "runtime_command": context["runtime_command"],
                    "project_arg": project_arg, "project_resolution": project_resolution,
-                   "core_entry": read_resource_fn("core/efficiency/entry.md").decode("utf-8")}
+                   "core_entry": read_resource_fn("core/efficiency/entry.md").decode("utf-8").replace("\r\n", "\n")}
     artifacts = []
     seen = set()
     for item in spec["files"]:
@@ -76,7 +76,7 @@ def render_spec(context, read_resource_fn, spec):
                   "description": command_data[ident]["description"] if ident else "",
                   "body": command_data[ident]["body"] if ident else ""}
         template_path = item.get("user_template", item["template"]) if scope == "user" else item["template"]
-        template = read_resource_fn(template_path).decode("utf-8")
+        template = read_resource_fn(template_path).decode("utf-8").replace("\r\n", "\n")
         try:
             rendered = string.Template(template).substitute(values)
         except KeyError as exc:

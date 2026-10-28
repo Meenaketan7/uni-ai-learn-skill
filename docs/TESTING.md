@@ -11,7 +11,7 @@ python3 dist/uni-learn.pyz --help
 The suite uses temporary homes, application directories, and projects. It checks
 learning gates, isolated task state, checkpoint integrity, history/recall,
 routing eligibility, all adapter profiles, installation ownership, rollback,
-crash recovery, packaging, and release distribution. The latest local gate on 2026-10-27 was 223 passing tests on macOS with Python
+crash recovery, packaging, and release distribution. The latest local gate on 2026-10-28 was 230 passing tests on macOS with Python
 3.14, with no skips. The GitHub Actions matrix is the
 source of results for actual Linux and Windows runners; local path fixtures do
 not establish those platforms passed.
@@ -136,6 +136,10 @@ completed sooner, and the runs were not a controlled repeated benchmark.
 The release matrix uses Python UTF-8 mode so UTF-8 fixture files are read
 consistently on Windows. A separate subprocess regression explicitly forces
 cp1252 standard output and verifies Unicode project paths and setup still work.
+Byte fixtures also exercise CRLF skill frontmatter, Cursor headers, and global
+instructions with and without a final newline. Setup and removal must preserve
+the original user bytes. CRLF source checkouts must build the same archive as LF
+checkouts, and rendered command examples must remain on one line.
 
 ## Repeating a live check
 
