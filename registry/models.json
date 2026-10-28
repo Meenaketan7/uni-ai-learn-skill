@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "task_tiers": {"discover": "efficient", "research": "efficient", "transform": "efficient", "diagnose": "strong", "implement": "strong", "teach": "strong", "plan": "frontier", "verify": "strong"},
+  "tier_fallbacks": {"efficient": ["strong", "frontier"], "strong": ["frontier"], "frontier": []},
+  "models": {},
+  "overrides": {"global": {}, "projects": {}},
+  "fallback": {"action": "keep_current_host_model", "report": true}
+}

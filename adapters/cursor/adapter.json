@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "profile": "cursor",
+  "display_name": "Cursor",
+  "tier": 1,
+  "executable": "cursor",
+  "version_args": [
+    "--version"
+  ],
+  "capabilities": {
+    "activation": "native_explicit_only",
+    "mode_refresh": "instruction_following",
+    "model_control": "manual_selection",
+    "subagent_selection": false,
+    "session_switch": false,
+    "compaction": {
+      "strategy": "checkpoint_around_native",
+      "native_command": "/compress",
+      "execution": "user"
+    },
+    "live_tested": false,
+    "instruction_budget": "unverified",
+    "mcp_configuration": "manual_only"
+  },
+  "files": [
+    {
+      "path": ".cursor/skills/learn/SKILL.md",
+      "template": "adapters/cursor/templates/command.md",
+      "mode": "command",
+      "command": "learn"
+    },
+    {
+      "path": ".cursor/skills/learn-hint/SKILL.md",
+      "template": "adapters/cursor/templates/command.md",
+      "mode": "command",
+      "command": "learn-hint"
+    },
+    {
+      "path": ".cursor/skills/learn-debug/SKILL.md",
+      "template": "adapters/cursor/templates/command.md",
+      "mode": "command",
+      "command": "learn-debug"
+    },
+    {
+      "path": ".cursor/skills/learn-review/SKILL.md",
+      "template": "adapters/cursor/templates/command.md",
+      "mode": "command",
+      "command": "learn-review"
+    },
+    {
+      "path": ".cursor/skills/learn-design/SKILL.md",
+      "template": "adapters/cursor/templates/command.md",
+      "mode": "command",
+      "command": "learn-design"
+    },
+    {
+      "path": ".cursor/skills/learn-recall/SKILL.md",
+      "template": "adapters/cursor/templates/command.md",
+      "mode": "command",
+      "command": "learn-recall"
+    },
+    {
+      "path": ".cursor/skills/learn-compact/SKILL.md",
+      "template": "adapters/cursor/templates/command.md",
+      "mode": "command",
+      "command": "learn-compact"
+    },
+    {
+      "path": ".cursor/rules/uni-learn.mdc",
+      "template": "adapters/cursor/templates/entry.md",
+      "mode": "persistent"
+    }
+  ],
+  "commands": {
+    "learn": {
+      "invocation": "/learn",
+      "path": ".cursor/skills/learn/SKILL.md"
+    },
+    "learn-hint": {
+      "invocation": "/learn-hint",
+      "path": ".cursor/skills/learn-hint/SKILL.md"
+    },
+    "learn-debug": {
+      "invocation": "/learn-debug",
+      "path": ".cursor/skills/learn-debug/SKILL.md"
+    },
+    "learn-review": {
+      "invocation": "/learn-review",
+      "path": ".cursor/skills/learn-review/SKILL.md"
+    },
+    "learn-design": {
+      "invocation": "/learn-design",
+      "path": ".cursor/skills/learn-design/SKILL.md"
+    },
+    "learn-recall": {
+      "invocation": "/learn-recall",
+      "path": ".cursor/skills/learn-recall/SKILL.md"
+    },
+    "learn-compact": {
+      "invocation": "/learn-compact",
+      "path": ".cursor/skills/learn-compact/SKILL.md"
+    }
+  },
+  "warnings": [
+    "CLI compact behavior does not prove editor compact behavior.",
+    "Native command loading and model behavior depend on the installed host version."
+  ]
+}

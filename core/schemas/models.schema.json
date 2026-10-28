@@ -1,0 +1,929 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Qualified model registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "task_tiers",
+    "tier_fallbacks",
+    "models",
+    "overrides",
+    "fallback"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "task_tiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "discover",
+        "research",
+        "transform",
+        "diagnose",
+        "implement",
+        "teach",
+        "plan",
+        "verify"
+      ],
+      "properties": {
+        "discover": {
+          "enum": [
+            "efficient",
+            "strong",
+            "frontier"
+          ]
+        },
+        "research": {
+          "enum": [
+            "efficient",
+            "strong",
+            "frontier"
+          ]
+        },
+        "transform": {
+          "enum": [
+            "efficient",
+            "strong",
+            "frontier"
+          ]
+        },
+        "diagnose": {
+          "enum": [
+            "efficient",
+            "strong",
+            "frontier"
+          ]
+        },
+        "implement": {
+          "enum": [
+            "efficient",
+            "strong",
+            "frontier"
+          ]
+        },
+        "teach": {
+          "enum": [
+            "efficient",
+            "strong",
+            "frontier"
+          ]
+        },
+        "plan": {
+          "enum": [
+            "efficient",
+            "strong",
+            "frontier"
+          ]
+        },
+        "verify": {
+          "enum": [
+            "efficient",
+            "strong",
+            "frontier"
+          ]
+        }
+      }
+    },
+    "tier_fallbacks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "efficient",
+        "strong",
+        "frontier"
+      ],
+      "properties": {
+        "efficient": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "efficient",
+              "strong",
+              "frontier"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "strong": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "efficient",
+              "strong",
+              "frontier"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "frontier": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "efficient",
+              "strong",
+              "frontier"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "models": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tier",
+          "qualified_tasks",
+          "bindings",
+          "limits",
+          "reasoning",
+          "pricing",
+          "relative_cost_rank",
+          "qualification",
+          "verified_at"
+        ],
+        "properties": {
+          "tier": {
+            "enum": [
+              "efficient",
+              "strong",
+              "frontier"
+            ]
+          },
+          "qualified_tasks": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "discover",
+                "research",
+                "transform",
+                "diagnose",
+                "implement",
+                "teach",
+                "plan",
+                "verify"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "bindings": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "native_id",
+                "provider",
+                "availability",
+                "checked_at",
+                "source"
+              ],
+              "properties": {
+                "native_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "provider": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "availability": {
+                  "enum": [
+                    "available",
+                    "unavailable",
+                    "unknown"
+                  ]
+                },
+                "checked_at": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "source": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "context_tokens",
+              "max_output_tokens",
+              "tools",
+              "source"
+            ],
+            "properties": {
+              "context_tokens": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "max_output_tokens": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tools": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "source": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "reasoning": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "control",
+              "levels_by_host"
+            ],
+            "properties": {
+              "control": {
+                "enum": [
+                  "configurable",
+                  "fixed",
+                  "unknown"
+                ]
+              },
+              "levels_by_host": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [],
+                  "properties": {
+                    "routine": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "deliberate": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "deep": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "maximum": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "pricing": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "currency",
+              "per_tokens",
+              "input",
+              "output",
+              "cached_input",
+              "source",
+              "checked_at"
+            ],
+            "properties": {
+              "currency": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "per_tokens": {
+                "const": 1000000
+              },
+              "input": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "output": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "cached_input": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "source": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "checked_at": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "relative_cost_rank": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "qualification": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "task_class",
+                "host_profile",
+                "scenario",
+                "result",
+                "evidence",
+                "checked_at"
+              ],
+              "properties": {
+                "task_class": {
+                  "enum": [
+                    "discover",
+                    "research",
+                    "transform",
+                    "diagnose",
+                    "implement",
+                    "teach",
+                    "plan",
+                    "verify"
+                  ]
+                },
+                "host_profile": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "scenario": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "result": {
+                  "enum": [
+                    "pass",
+                    "fail",
+                    "unverified"
+                  ]
+                },
+                "evidence": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "checked_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "verified_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "overrides": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "global",
+        "projects"
+      ],
+      "properties": {
+        "global": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [],
+          "properties": {
+            "discover": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "model_key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tier": {
+                  "enum": [
+                    "efficient",
+                    "strong",
+                    "frontier"
+                  ]
+                },
+                "reasoning": {
+                  "enum": [
+                    "routine",
+                    "deliberate",
+                    "deep",
+                    "maximum"
+                  ]
+                }
+              }
+            },
+            "research": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "model_key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tier": {
+                  "enum": [
+                    "efficient",
+                    "strong",
+                    "frontier"
+                  ]
+                },
+                "reasoning": {
+                  "enum": [
+                    "routine",
+                    "deliberate",
+                    "deep",
+                    "maximum"
+                  ]
+                }
+              }
+            },
+            "transform": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "model_key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tier": {
+                  "enum": [
+                    "efficient",
+                    "strong",
+                    "frontier"
+                  ]
+                },
+                "reasoning": {
+                  "enum": [
+                    "routine",
+                    "deliberate",
+                    "deep",
+                    "maximum"
+                  ]
+                }
+              }
+            },
+            "diagnose": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "model_key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tier": {
+                  "enum": [
+                    "efficient",
+                    "strong",
+                    "frontier"
+                  ]
+                },
+                "reasoning": {
+                  "enum": [
+                    "routine",
+                    "deliberate",
+                    "deep",
+                    "maximum"
+                  ]
+                }
+              }
+            },
+            "implement": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "model_key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tier": {
+                  "enum": [
+                    "efficient",
+                    "strong",
+                    "frontier"
+                  ]
+                },
+                "reasoning": {
+                  "enum": [
+                    "routine",
+                    "deliberate",
+                    "deep",
+                    "maximum"
+                  ]
+                }
+              }
+            },
+            "teach": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "model_key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tier": {
+                  "enum": [
+                    "efficient",
+                    "strong",
+                    "frontier"
+                  ]
+                },
+                "reasoning": {
+                  "enum": [
+                    "routine",
+                    "deliberate",
+                    "deep",
+                    "maximum"
+                  ]
+                }
+              }
+            },
+            "plan": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "model_key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tier": {
+                  "enum": [
+                    "efficient",
+                    "strong",
+                    "frontier"
+                  ]
+                },
+                "reasoning": {
+                  "enum": [
+                    "routine",
+                    "deliberate",
+                    "deep",
+                    "maximum"
+                  ]
+                }
+              }
+            },
+            "verify": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "model_key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tier": {
+                  "enum": [
+                    "efficient",
+                    "strong",
+                    "frontier"
+                  ]
+                },
+                "reasoning": {
+                  "enum": [
+                    "routine",
+                    "deliberate",
+                    "deep",
+                    "maximum"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "projects": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [],
+            "properties": {
+              "discover": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "model_key": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "tier": {
+                    "enum": [
+                      "efficient",
+                      "strong",
+                      "frontier"
+                    ]
+                  },
+                  "reasoning": {
+                    "enum": [
+                      "routine",
+                      "deliberate",
+                      "deep",
+                      "maximum"
+                    ]
+                  }
+                }
+              },
+              "research": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "model_key": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "tier": {
+                    "enum": [
+                      "efficient",
+                      "strong",
+                      "frontier"
+                    ]
+                  },
+                  "reasoning": {
+                    "enum": [
+                      "routine",
+                      "deliberate",
+                      "deep",
+                      "maximum"
+                    ]
+                  }
+                }
+              },
+              "transform": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "model_key": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "tier": {
+                    "enum": [
+                      "efficient",
+                      "strong",
+                      "frontier"
+                    ]
+                  },
+                  "reasoning": {
+                    "enum": [
+                      "routine",
+                      "deliberate",
+                      "deep",
+                      "maximum"
+                    ]
+                  }
+                }
+              },
+              "diagnose": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "model_key": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "tier": {
+                    "enum": [
+                      "efficient",
+                      "strong",
+                      "frontier"
+                    ]
+                  },
+                  "reasoning": {
+                    "enum": [
+                      "routine",
+                      "deliberate",
+                      "deep",
+                      "maximum"
+                    ]
+                  }
+                }
+              },
+              "implement": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "model_key": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "tier": {
+                    "enum": [
+                      "efficient",
+                      "strong",
+                      "frontier"
+                    ]
+                  },
+                  "reasoning": {
+                    "enum": [
+                      "routine",
+                      "deliberate",
+                      "deep",
+                      "maximum"
+                    ]
+                  }
+                }
+              },
+              "teach": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "model_key": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "tier": {
+                    "enum": [
+                      "efficient",
+                      "strong",
+                      "frontier"
+                    ]
+                  },
+                  "reasoning": {
+                    "enum": [
+                      "routine",
+                      "deliberate",
+                      "deep",
+                      "maximum"
+                    ]
+                  }
+                }
+              },
+              "plan": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "model_key": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "tier": {
+                    "enum": [
+                      "efficient",
+                      "strong",
+                      "frontier"
+                    ]
+                  },
+                  "reasoning": {
+                    "enum": [
+                      "routine",
+                      "deliberate",
+                      "deep",
+                      "maximum"
+                    ]
+                  }
+                }
+              },
+              "verify": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "model_key": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "tier": {
+                    "enum": [
+                      "efficient",
+                      "strong",
+                      "frontier"
+                    ]
+                  },
+                  "reasoning": {
+                    "enum": [
+                      "routine",
+                      "deliberate",
+                      "deep",
+                      "maximum"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "fallback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "report"
+      ],
+      "properties": {
+        "action": {
+          "const": "keep_current_host_model"
+        },
+        "report": {
+          "const": true
+        }
+      }
+    }
+  }
+}

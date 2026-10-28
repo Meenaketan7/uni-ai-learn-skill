@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "profile": "opencode",
+  "display_name": "OpenCode",
+  "tier": 1,
+  "executable": "opencode",
+  "version_args": [
+    "--version"
+  ],
+  "capabilities": {
+    "activation": "dispatcher",
+    "mode_refresh": "instruction_following",
+    "model_control": "manual_selection",
+    "subagent_selection": false,
+    "session_switch": false,
+    "compaction": {
+      "strategy": "checkpoint_around_native",
+      "native_command": "/compact",
+      "execution": "user"
+    },
+    "live_tested": false,
+    "instruction_budget": "unverified",
+    "mcp_configuration": "manual_only"
+  },
+  "files": [
+    {
+      "path": ".opencode/skills/learn/SKILL.md",
+      "template": "adapters/opencode/templates/command.md",
+      "mode": "command",
+      "command": "learn"
+    },
+    {
+      "path": ".opencode/skills/learn-hint/SKILL.md",
+      "template": "adapters/opencode/templates/command.md",
+      "mode": "command",
+      "command": "learn-hint"
+    },
+    {
+      "path": ".opencode/skills/learn-debug/SKILL.md",
+      "template": "adapters/opencode/templates/command.md",
+      "mode": "command",
+      "command": "learn-debug"
+    },
+    {
+      "path": ".opencode/skills/learn-review/SKILL.md",
+      "template": "adapters/opencode/templates/command.md",
+      "mode": "command",
+      "command": "learn-review"
+    },
+    {
+      "path": ".opencode/skills/learn-design/SKILL.md",
+      "template": "adapters/opencode/templates/command.md",
+      "mode": "command",
+      "command": "learn-design"
+    },
+    {
+      "path": ".opencode/skills/learn-recall/SKILL.md",
+      "template": "adapters/opencode/templates/command.md",
+      "mode": "command",
+      "command": "learn-recall"
+    },
+    {
+      "path": ".opencode/skills/learn-compact/SKILL.md",
+      "template": "adapters/opencode/templates/command.md",
+      "mode": "command",
+      "command": "learn-compact"
+    },
+    {
+      "path": ".opencode/commands/learn.md",
+      "template": "adapters/opencode/templates/slash-command.md",
+      "mode": "command",
+      "command": "learn"
+    },
+    {
+      "path": ".opencode/commands/learn-hint.md",
+      "template": "adapters/opencode/templates/slash-command.md",
+      "mode": "command",
+      "command": "learn-hint"
+    },
+    {
+      "path": ".opencode/commands/learn-debug.md",
+      "template": "adapters/opencode/templates/slash-command.md",
+      "mode": "command",
+      "command": "learn-debug"
+    },
+    {
+      "path": ".opencode/commands/learn-review.md",
+      "template": "adapters/opencode/templates/slash-command.md",
+      "mode": "command",
+      "command": "learn-review"
+    },
+    {
+      "path": ".opencode/commands/learn-design.md",
+      "template": "adapters/opencode/templates/slash-command.md",
+      "mode": "command",
+      "command": "learn-design"
+    },
+    {
+      "path": ".opencode/commands/learn-recall.md",
+      "template": "adapters/opencode/templates/slash-command.md",
+      "mode": "command",
+      "command": "learn-recall"
+    },
+    {
+      "path": ".opencode/commands/learn-compact.md",
+      "template": "adapters/opencode/templates/slash-command.md",
+      "mode": "command",
+      "command": "learn-compact"
+    },
+    {
+      "path": "AGENTS.md",
+      "template": "adapters/opencode/templates/entry.md",
+      "mode": "persistent"
+    }
+  ],
+  "commands": {
+    "learn": {
+      "invocation": "/learn",
+      "path": ".opencode/commands/learn.md"
+    },
+    "learn-hint": {
+      "invocation": "/learn-hint",
+      "path": ".opencode/commands/learn-hint.md"
+    },
+    "learn-debug": {
+      "invocation": "/learn-debug",
+      "path": ".opencode/commands/learn-debug.md"
+    },
+    "learn-review": {
+      "invocation": "/learn-review",
+      "path": ".opencode/commands/learn-review.md"
+    },
+    "learn-design": {
+      "invocation": "/learn-design",
+      "path": ".opencode/commands/learn-design.md"
+    },
+    "learn-recall": {
+      "invocation": "/learn-recall",
+      "path": ".opencode/commands/learn-recall.md"
+    },
+    "learn-compact": {
+      "invocation": "/learn-compact",
+      "path": ".opencode/commands/learn-compact.md"
+    }
+  },
+  "warnings": [
+    "Experimental native compaction hook is not installed; checkpoint surrounds native compact.",
+    "OpenCode slash commands load Uni Learn skills through the native skill tool; model behavior depends on the installed host version.",
+    "Native skills may be selected automatically; the off-mode gate relies on instruction-following."
+  ]
+}

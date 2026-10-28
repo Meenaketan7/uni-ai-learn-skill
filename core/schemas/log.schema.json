@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Append-only learning and review event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "entry_id",
+    "at",
+    "project_id",
+    "task_id",
+    "tags",
+    "prompt",
+    "attempt",
+    "misconception",
+    "correction",
+    "outcome",
+    "due_at",
+    "concept_id",
+    "review_of",
+    "success_streak"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "entry_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "prompt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt": {
+      "type": "string"
+    },
+    "misconception": {
+      "type": "string"
+    },
+    "correction": {
+      "type": "string"
+    },
+    "outcome": {
+      "type": "string"
+    },
+    "due_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "concept_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review_of": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "success_streak": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

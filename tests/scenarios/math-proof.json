@@ -1,0 +1,37 @@
+{
+  "scenario_id": "S-PROOF",
+  "domain": "math-proof",
+  "learner": {
+    "prompt": "Evaluate the claim: for real x and y, x squared equals y squared implies x equals y. Identify an unsupported step and repair the statement.",
+    "material": "Attempted proof: x^2 - y^2 = 0, so (x-y)(x+y) = 0. Divide by x+y to obtain x-y = 0.",
+    "constraints": [
+      "State the domain and assumptions.",
+      "Provide a counterexample if the claim is false.",
+      "Give a valid corrected statement and proof, including the zero case."
+    ]
+  },
+  "reviewer_only": {
+    "attempt": "Factoring is valid, so I think dividing by x+y finishes the proof for all real inputs.",
+    "failed_hypothesis": "Equality of squares uniquely determines a real number.",
+    "prediction_probe": "Before evaluating, predict what happens for x = 1 and y = -1, and whether the division is defined.",
+    "hint_ladder": [
+      "Check the condition required for the division.",
+      "A product is zero when either factor is zero; what if x+y is zero?",
+      "Over all reals the conclusion is x=y or x=-y. Consider restricting both numbers to be nonnegative."
+    ],
+    "worked_outcome": {
+      "counterexample": "x=1, y=-1: equal squares, unequal numbers, x+y=0.",
+      "corrected_statement": "If x,y are nonnegative real numbers and x^2=y^2, then x=y.",
+      "proof": "Factor to (x-y)(x+y)=0. If x+y>0, division yields x-y=0. If x+y=0, nonnegativity forces x=y=0. Both cases give x=y.",
+      "unrestricted_statement": "For real x,y, equality of squares implies x=y or x=-y."
+    },
+    "checks": [
+      "The counterexample satisfies the original premise and falsifies its conclusion.",
+      "The proof never divides by a possibly zero quantity without a case split.",
+      "The repaired assumption is explicit and the pair (0,0) is covered.",
+      "Accept other sufficient assumptions with a valid proof and explicit domain; assess only their stated scope."
+    ],
+    "transfer_question": "What can be concluded about |x| and |y| over all real inputs?",
+    "transfer_answer": "Their absolute values are equal, since both are nonnegative and their squares are equal."
+  }
+}

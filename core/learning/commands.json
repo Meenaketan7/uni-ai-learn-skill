@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "commands": {
+    "learn": {
+      "id": "learn",
+      "description": "Start guided work or persist project mode with on/off.",
+      "body": "core/learning/workflow.md",
+      "teaching": true
+    },
+    "learn-hint": {
+      "id": "learn-hint",
+      "description": "Request the next small hint after an attempt.",
+      "body": "core/learning/hint.md",
+      "teaching": true
+    },
+    "learn-debug": {
+      "id": "learn-debug",
+      "description": "Test a hypothesis and explain a failure.",
+      "body": "core/learning/debug.md",
+      "teaching": true
+    },
+    "learn-review": {
+      "id": "learn-review",
+      "description": "Self-assess an artifact or teach back a concept.",
+      "body": "core/learning/review.md",
+      "teaching": true
+    },
+    "learn-design": {
+      "id": "learn-design",
+      "description": "Derive a contract or defend tradeoffs.",
+      "body": "core/learning/design.md",
+      "teaching": true
+    },
+    "learn-recall": {
+      "id": "learn-recall",
+      "description": "Attempt unaided retrieval.",
+      "body": "core/learning/recall.md",
+      "teaching": true
+    },
+    "learn-compact": {
+      "id": "learn-compact",
+      "description": "Preserve task state and prepare compact/resume.",
+      "body": "core/compaction/prepare.md",
+      "teaching": false
+    }
+  }
+}

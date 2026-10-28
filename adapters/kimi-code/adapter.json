@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "profile": "kimi-code",
+  "display_name": "Kimi Code CLI",
+  "tier": 2,
+  "executable": "kimi-code",
+  "version_args": [
+    "--version"
+  ],
+  "capabilities": {
+    "activation": "native_explicit_only",
+    "mode_refresh": "instruction_following",
+    "model_control": "manual_selection",
+    "subagent_selection": false,
+    "session_switch": false,
+    "compaction": {
+      "strategy": "native_with_instructions",
+      "native_command": "/compact",
+      "execution": "user"
+    },
+    "live_tested": false,
+    "instruction_budget": "unverified",
+    "mcp_configuration": "manual_only"
+  },
+  "files": [
+    {
+      "path": ".kimi-code/skills/learn/SKILL.md",
+      "template": "adapters/kimi-code/templates/command.md",
+      "mode": "command",
+      "command": "learn"
+    },
+    {
+      "path": ".kimi-code/skills/learn-hint/SKILL.md",
+      "template": "adapters/kimi-code/templates/command.md",
+      "mode": "command",
+      "command": "learn-hint"
+    },
+    {
+      "path": ".kimi-code/skills/learn-debug/SKILL.md",
+      "template": "adapters/kimi-code/templates/command.md",
+      "mode": "command",
+      "command": "learn-debug"
+    },
+    {
+      "path": ".kimi-code/skills/learn-review/SKILL.md",
+      "template": "adapters/kimi-code/templates/command.md",
+      "mode": "command",
+      "command": "learn-review"
+    },
+    {
+      "path": ".kimi-code/skills/learn-design/SKILL.md",
+      "template": "adapters/kimi-code/templates/command.md",
+      "mode": "command",
+      "command": "learn-design"
+    },
+    {
+      "path": ".kimi-code/skills/learn-recall/SKILL.md",
+      "template": "adapters/kimi-code/templates/command.md",
+      "mode": "command",
+      "command": "learn-recall"
+    },
+    {
+      "path": ".kimi-code/skills/learn-compact/SKILL.md",
+      "template": "adapters/kimi-code/templates/command.md",
+      "mode": "command",
+      "command": "learn-compact"
+    },
+    {
+      "path": "AGENTS.md",
+      "template": "adapters/kimi-code/templates/entry.md",
+      "mode": "persistent"
+    }
+  ],
+  "commands": {
+    "learn": {
+      "invocation": "/skill:learn",
+      "path": ".kimi-code/skills/learn/SKILL.md"
+    },
+    "learn-hint": {
+      "invocation": "/skill:learn-hint",
+      "path": ".kimi-code/skills/learn-hint/SKILL.md"
+    },
+    "learn-debug": {
+      "invocation": "/skill:learn-debug",
+      "path": ".kimi-code/skills/learn-debug/SKILL.md"
+    },
+    "learn-review": {
+      "invocation": "/skill:learn-review",
+      "path": ".kimi-code/skills/learn-review/SKILL.md"
+    },
+    "learn-design": {
+      "invocation": "/skill:learn-design",
+      "path": ".kimi-code/skills/learn-design/SKILL.md"
+    },
+    "learn-recall": {
+      "invocation": "/skill:learn-recall",
+      "path": ".kimi-code/skills/learn-recall/SKILL.md"
+    },
+    "learn-compact": {
+      "invocation": "/skill:learn-compact",
+      "path": ".kimi-code/skills/learn-compact/SKILL.md"
+    }
+  },
+  "warnings": [
+    "Current Kimi Code CLI paths only; legacy .kimi generation is unverified.",
+    "Native command loading and model behavior depend on the installed host version."
+  ]
+}

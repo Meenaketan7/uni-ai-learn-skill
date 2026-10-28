@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "profile": "antigravity",
+  "display_name": "Antigravity IDE",
+  "tier": 1,
+  "executable": "antigravity",
+  "version_args": [
+    "--version"
+  ],
+  "capabilities": {
+    "activation": "dispatcher",
+    "mode_refresh": "instruction_following",
+    "model_control": "manual_selection",
+    "subagent_selection": false,
+    "session_switch": false,
+    "compaction": {
+      "strategy": "fresh_session",
+      "native_command": null,
+      "execution": "user"
+    },
+    "live_tested": false,
+    "instruction_budget": "unverified",
+    "mcp_configuration": "manual_only"
+  },
+  "files": [
+    {
+      "path": ".agents/skills/learn/SKILL.md",
+      "template": "adapters/antigravity/templates/command.md",
+      "mode": "command",
+      "command": "learn"
+    },
+    {
+      "path": ".agents/skills/learn-hint/SKILL.md",
+      "template": "adapters/antigravity/templates/command.md",
+      "mode": "command",
+      "command": "learn-hint"
+    },
+    {
+      "path": ".agents/skills/learn-debug/SKILL.md",
+      "template": "adapters/antigravity/templates/command.md",
+      "mode": "command",
+      "command": "learn-debug"
+    },
+    {
+      "path": ".agents/skills/learn-review/SKILL.md",
+      "template": "adapters/antigravity/templates/command.md",
+      "mode": "command",
+      "command": "learn-review"
+    },
+    {
+      "path": ".agents/skills/learn-design/SKILL.md",
+      "template": "adapters/antigravity/templates/command.md",
+      "mode": "command",
+      "command": "learn-design"
+    },
+    {
+      "path": ".agents/skills/learn-recall/SKILL.md",
+      "template": "adapters/antigravity/templates/command.md",
+      "mode": "command",
+      "command": "learn-recall"
+    },
+    {
+      "path": ".agents/skills/learn-compact/SKILL.md",
+      "template": "adapters/antigravity/templates/command.md",
+      "mode": "command",
+      "command": "learn-compact"
+    },
+    {
+      "path": ".agents/rules/uni-learn.md",
+      "template": "adapters/antigravity/templates/entry.md",
+      "mode": "persistent"
+    }
+  ],
+  "commands": {
+    "learn": {
+      "invocation": "/uni-learn",
+      "path": ".agents/skills/learn/SKILL.md"
+    },
+    "learn-hint": {
+      "invocation": "/uni-learn-hint",
+      "path": ".agents/skills/learn-hint/SKILL.md"
+    },
+    "learn-debug": {
+      "invocation": "/uni-learn-debug",
+      "path": ".agents/skills/learn-debug/SKILL.md"
+    },
+    "learn-review": {
+      "invocation": "/uni-learn-review",
+      "path": ".agents/skills/learn-review/SKILL.md"
+    },
+    "learn-design": {
+      "invocation": "/uni-learn-design",
+      "path": ".agents/skills/learn-design/SKILL.md"
+    },
+    "learn-recall": {
+      "invocation": "/uni-learn-recall",
+      "path": ".agents/skills/learn-recall/SKILL.md"
+    },
+    "learn-compact": {
+      "invocation": "/uni-learn-compact",
+      "path": ".agents/skills/learn-compact/SKILL.md"
+    }
+  },
+  "warnings": [
+    "Current .agents generation only; no explicit-only flag established. Dispatcher gate relies on instruction-following.",
+    "Native command loading and model behavior depend on the installed host version.",
+    "Antigravity has an unrelated built-in /learn. Uni Learn uses /uni-learn; explicit skill names preserve existing installation paths."
+  ]
+}

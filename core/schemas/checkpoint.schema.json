@@ -1,0 +1,589 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Durable task and learning retention",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "checkpoint_id",
+    "revision",
+    "task_revision",
+    "task_sha256",
+    "project_revision",
+    "project_id",
+    "session_id",
+    "task_id",
+    "mode",
+    "bypass",
+    "objective",
+    "constraints",
+    "acceptance_criteria",
+    "workflow_position",
+    "next_action",
+    "decisions",
+    "failed_approaches",
+    "open_questions",
+    "learning",
+    "pointers",
+    "audit"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "checkpoint_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "task_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "task_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "project_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "enum": [
+        "on",
+        "off"
+      ]
+    },
+    "bypass": {
+      "type": "boolean"
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "workflow_position": {
+      "type": "string",
+      "minLength": 1
+    },
+    "next_action": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "choice",
+          "reason",
+          "source_ids"
+        ],
+        "properties": {
+          "choice": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "failed_approaches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "attempt",
+          "observation",
+          "explanation",
+          "unresolved"
+        ],
+        "properties": {
+          "attempt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "explanation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "unresolved": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "unknown",
+          "why",
+          "evidence_needed"
+        ],
+        "properties": {
+          "unknown": {
+            "type": "string",
+            "minLength": 1
+          },
+          "why": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_needed": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "learning": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "attempts",
+            "predictions",
+            "hypotheses",
+            "misconceptions",
+            "hint_level",
+            "intent",
+            "difficulty_evidence",
+            "prediction_pending"
+          ],
+          "properties": {
+            "attempts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "predictions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "hypotheses": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "misconceptions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "hint_level": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3
+            },
+            "intent": {
+              "type": "string",
+              "minLength": 1
+            },
+            "difficulty_evidence": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "prediction_pending": {
+              "type": "boolean"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "pointers": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "path",
+              "sha256",
+              "method"
+            ],
+            "properties": {
+              "kind": {
+                "const": "file"
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "symbol": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "query": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "range": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "unique_conversation": {
+                "type": "boolean"
+              },
+              "durably_stored": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "url",
+              "retrieved_at",
+              "method"
+            ],
+            "properties": {
+              "kind": {
+                "const": "url"
+              },
+              "url": {
+                "type": "string",
+                "pattern": "^https?://"
+              },
+              "retrieved_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "query": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "source": {
+                "type": "string",
+                "minLength": 1
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fallback": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "path",
+                  "sha256",
+                  "method"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "file"
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "symbol": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "query": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "method": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "range": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "unique_conversation": {
+                    "type": "boolean"
+                  },
+                  "durably_stored": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "integration",
+              "record_id",
+              "retrieved_at",
+              "method"
+            ],
+            "properties": {
+              "kind": {
+                "const": "integration"
+              },
+              "integration": {
+                "type": "string",
+                "minLength": 1
+              },
+              "record_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "retrieved_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expired": {
+                "type": "boolean"
+              },
+              "fallback": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "path",
+                  "sha256",
+                  "method"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "file"
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "symbol": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "query": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "method": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "range": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "unique_conversation": {
+                    "type": "boolean"
+                  },
+                  "durably_stored": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retained",
+        "pointer_converted",
+        "dropped",
+        "before_valid",
+        "after_valid",
+        "known_missing_context"
+      ],
+      "properties": {
+        "retained": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "pointer_converted": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "dropped": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "reason"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "before_valid": {
+          "type": "boolean"
+        },
+        "after_valid": {
+          "type": "boolean"
+        },
+        "known_missing_context": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

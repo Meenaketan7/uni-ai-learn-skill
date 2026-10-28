@@ -1,0 +1,48 @@
+{
+  "scenario_id": "S-DESIGN",
+  "domain": "product-system",
+  "learner": {
+    "prompt": "Design note synchronization for an offline field-inspection app. Propose alternatives, defend one, and show how it behaves under failure.",
+    "material": "Fifty staff create or edit up to 10,000 text notes per device. Each note body is at most 2 KiB. Devices can be offline for 48 hours. Requests and responses can be lost, duplicated or reordered.",
+    "constraints": [
+      "Persist a local save before displaying 'saved on this device'; target p95 completion within 100 ms under the stated local workload and measure that target.",
+      "Display 'synced' only after server durable acknowledgement.",
+      "A crash after a displayed durable save must not lose that saved note under the stated storage assumptions.",
+      "Retries must not create duplicate logical edits.",
+      "Concurrent edits from different devices must remain recoverable without silent overwrite.",
+      "State storage assumptions, unresolved tradeoffs, and a validation plan."
+    ]
+  },
+  "reviewer_only": {
+    "attempt": "I would send each edit immediately and retry with a new request ID if there is no response. The last arriving version wins.",
+    "failed_hypothesis": "No response proves the server did not save the edit.",
+    "prediction_probe": "Predict the outcome if the server commits an edit but its response is lost, and the client retries.",
+    "hint_ladder": [
+      "Trace a save across local commit, server commit and acknowledgement.",
+      "A lost acknowledgement does not tell you whether the server committed; retry identity and version conflicts matter.",
+      "Commit the note plus an outbox item locally, reuse one operation ID on retries, and atomically deduplicate on the server."
+    ],
+    "worked_outcome": {
+      "assumptions": "Local and server storage honor committed durable transactions across process crashes; hardware destruction and storage corruption are outside this scenario.",
+      "design": "A local transaction saves the note, its base revision, and an outbox operation with a stable ID. Show local saved after commit. Retry that same operation until the server atomically records its ID and a durable version; return the original result for duplicate IDs. Reject inconsistent reuse of an ID. Show synced only after its durable acknowledgement, then transactionally mark the outbox item complete. A stale base revision stores a conflict branch linked to its parent; retain both versions and request an explicit merge rather than silently choosing a winner.",
+      "alternative": "A client may retain an unacknowledged conflict locally instead of server branch storage if it clearly reports that status, preserves both edits, and defines later resolution. Last-arrival overwrite violates the stated requirement.",
+      "failure_timelines": [
+        "Crash before local commit: saved was not displayed; after commit: note and outbox recover together.",
+        "Server commit then lost response: retrying the stable ID returns the same committed result without another edit.",
+        "Out-of-order delivery: base revisions identify stale edits and retain a conflict instead of overwriting.",
+        "Crash after acknowledgement but before local outbox cleanup: replay is harmless through server deduplication."
+      ],
+      "validation": "Inject crashes at each transaction boundary; duplicate, drop and reorder traffic; edit the same note on two devices; assert recoverability, deduplication and correct UI statuses. Measure local-save p95 on representative devices with 10,000 notes before claiming the 100 ms target.",
+      "capacity": "10,000 maximum-size note bodies occupy about 19.53 MiB before metadata, indexes, revisions and queued edits; measure additional growth and define retention explicitly."
+    },
+    "checks": [
+      "Trace the lost-response retry with one stable operation ID and atomic server deduplication.",
+      "Show local-save and server-sync as distinct states backed by commits.",
+      "Demonstrate both concurrent versions remain accessible.",
+      "Cover each failure timeline and provide a measurable latency validation plan.",
+      "Do not claim latency measurements or absolute hardware durability from the design alone."
+    ],
+    "transfer_question": "Can receiving an HTTP request alone justify displaying 'synced'?",
+    "transfer_answer": "No. The acknowledgement must mean the server committed durable data; receiving or queuing a request is insufficient."
+  }
+}

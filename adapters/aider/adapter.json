@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "profile": "aider",
+  "display_name": "Aider",
+  "tier": 2,
+  "executable": "aider",
+  "version_args": [
+    "--version"
+  ],
+  "capabilities": {
+    "activation": "manual",
+    "mode_refresh": "instruction_following",
+    "model_control": "manual_selection",
+    "subagent_selection": false,
+    "session_switch": false,
+    "compaction": {
+      "strategy": "fresh_session",
+      "native_command": null,
+      "execution": "user"
+    },
+    "live_tested": false,
+    "instruction_budget": "unverified",
+    "mcp_configuration": "manual_only"
+  },
+  "files": [
+    {
+      "path": ".aider/uni-learn/learn.md",
+      "template": "adapters/aider/templates/command.md",
+      "mode": "command",
+      "command": "learn"
+    },
+    {
+      "path": ".aider/uni-learn/learn-hint.md",
+      "template": "adapters/aider/templates/command.md",
+      "mode": "command",
+      "command": "learn-hint"
+    },
+    {
+      "path": ".aider/uni-learn/learn-debug.md",
+      "template": "adapters/aider/templates/command.md",
+      "mode": "command",
+      "command": "learn-debug"
+    },
+    {
+      "path": ".aider/uni-learn/learn-review.md",
+      "template": "adapters/aider/templates/command.md",
+      "mode": "command",
+      "command": "learn-review"
+    },
+    {
+      "path": ".aider/uni-learn/learn-design.md",
+      "template": "adapters/aider/templates/command.md",
+      "mode": "command",
+      "command": "learn-design"
+    },
+    {
+      "path": ".aider/uni-learn/learn-recall.md",
+      "template": "adapters/aider/templates/command.md",
+      "mode": "command",
+      "command": "learn-recall"
+    },
+    {
+      "path": ".aider/uni-learn/learn-compact.md",
+      "template": "adapters/aider/templates/command.md",
+      "mode": "command",
+      "command": "learn-compact"
+    },
+    {
+      "path": ".aider/uni-learn/entry.md",
+      "template": "adapters/aider/templates/entry.md",
+      "mode": "persistent"
+    }
+  ],
+  "commands": {
+    "learn": {
+      "invocation": "/read .aider/uni-learn/learn.md",
+      "path": ".aider/uni-learn/learn.md"
+    },
+    "learn-hint": {
+      "invocation": "/read .aider/uni-learn/learn-hint.md",
+      "path": ".aider/uni-learn/learn-hint.md"
+    },
+    "learn-debug": {
+      "invocation": "/read .aider/uni-learn/learn-debug.md",
+      "path": ".aider/uni-learn/learn-debug.md"
+    },
+    "learn-review": {
+      "invocation": "/read .aider/uni-learn/learn-review.md",
+      "path": ".aider/uni-learn/learn-review.md"
+    },
+    "learn-design": {
+      "invocation": "/read .aider/uni-learn/learn-design.md",
+      "path": ".aider/uni-learn/learn-design.md"
+    },
+    "learn-recall": {
+      "invocation": "/read .aider/uni-learn/learn-recall.md",
+      "path": ".aider/uni-learn/learn-recall.md"
+    },
+    "learn-compact": {
+      "invocation": "/read .aider/uni-learn/learn-compact.md",
+      "path": ".aider/uni-learn/learn-compact.md"
+    }
+  },
+  "warnings": [
+    "Explicit file-load fallback; no native learn slash commands or automatic preference hook claimed.",
+    "Native command loading and model behavior depend on the installed host version."
+  ]
+}

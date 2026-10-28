@@ -1,0 +1,129 @@
+{
+  "scenario_id": "S-CODE",
+  "domain": "coding",
+  "learner": {
+    "prompt": "Find and repair the transfer defect. State the invariant and predict a failing case before running it.",
+    "material": "def transfer(balances, source, target, amount):\n    if amount <= 0:\n        raise ValueError('amount must be positive')\n    if balances[source] < amount:\n        raise ValueError('insufficient funds')\n    balances[source] -= amount\n    balances[target] += amount\n    return balances\n",
+    "constraints": [
+      "Use an ordinary dict of account names to nonnegative integer balances; amount is an integer.",
+      "A valid transfer between existing accounts preserves the total and nonnegative balances, and returns the same dict.",
+      "Missing accounts raise KeyError; nonpositive amounts or insufficient funds raise ValueError. Every rejected transfer leaves the dict unchanged.",
+      "A transfer to the same existing account with sufficient funds is a no-op."
+    ]
+  },
+  "reviewer_only": {
+    "attempt": "I think the positive-amount check and sufficient-funds check make every failure safe.",
+    "failed_hypothesis": "Any rejected transfer leaves all balances unchanged.",
+    "prediction_probe": "From {'A': 10}, transfer 3 from A to missing account B. Predict the exception and the entire dict afterward.",
+    "hint_ladder": [
+      "Look at the order of state changes and operations that can fail.",
+      "Check every rejection condition before the first mutation.",
+      "Check that both account names exist before debiting the source."
+    ],
+    "worked_outcome": {
+      "explanation": "The original debits A before looking up B, then raises KeyError with A left at 7. Validate both names before any mutation.",
+      "reference_code": "def transfer(balances, source, target, amount):\n    if amount <= 0:\n        raise ValueError('amount must be positive')\n    if source not in balances or target not in balances:\n        raise KeyError('unknown account')\n    if balances[source] < amount:\n        raise ValueError('insufficient funds')\n    balances[source] -= amount\n    balances[target] += amount\n    return balances\n"
+    },
+    "checks": [
+      {
+        "balances": {
+          "A": 10,
+          "B": 2
+        },
+        "source": "A",
+        "target": "B",
+        "amount": 3,
+        "expected_balances": {
+          "A": 7,
+          "B": 5
+        },
+        "exception": null
+      },
+      {
+        "balances": {
+          "A": 10
+        },
+        "source": "A",
+        "target": "B",
+        "amount": 3,
+        "expected_balances": {
+          "A": 10
+        },
+        "exception": "KeyError"
+      },
+      {
+        "balances": {
+          "B": 2
+        },
+        "source": "A",
+        "target": "B",
+        "amount": 1,
+        "expected_balances": {
+          "B": 2
+        },
+        "exception": "KeyError"
+      },
+      {
+        "balances": {
+          "A": 2,
+          "B": 4
+        },
+        "source": "A",
+        "target": "B",
+        "amount": 3,
+        "expected_balances": {
+          "A": 2,
+          "B": 4
+        },
+        "exception": "ValueError"
+      },
+      {
+        "balances": {
+          "A": 2,
+          "B": 4
+        },
+        "source": "A",
+        "target": "B",
+        "amount": 0,
+        "expected_balances": {
+          "A": 2,
+          "B": 4
+        },
+        "exception": "ValueError"
+      },
+      {
+        "balances": {
+          "A": 2,
+          "B": 4
+        },
+        "source": "A",
+        "target": "B",
+        "amount": -1,
+        "expected_balances": {
+          "A": 2,
+          "B": 4
+        },
+        "exception": "ValueError"
+      },
+      {
+        "balances": {
+          "A": 5
+        },
+        "source": "A",
+        "target": "A",
+        "amount": 2,
+        "expected_balances": {
+          "A": 5
+        },
+        "exception": null
+      }
+    ],
+    "rubric": [
+      "On success also verify result identity, conservation and nonnegativity.",
+      "On rejection compare the entire dict with its prior value.",
+      "Accept another implementation if all stated behavior holds."
+    ],
+    "transfer_question": "Why does checking the total only on successful calls miss this defect?",
+    "transfer_answer": "The failure path mutates state before raising; assertions must cover rejected operations too."
+  }
+}

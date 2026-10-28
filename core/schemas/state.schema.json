@@ -1,0 +1,310 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Project preferences and isolated task records",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "revision",
+        "project_id",
+        "learning",
+        "logging",
+        "log_cap_bytes"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "project_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "learning": {
+          "type": "boolean"
+        },
+        "logging": {
+          "type": "boolean"
+        },
+        "log_cap_bytes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "revision",
+        "project_id",
+        "session_id",
+        "task_id",
+        "objective",
+        "status",
+        "bypass",
+        "explicit_learning",
+        "hint_level",
+        "attempts",
+        "predictions",
+        "hypotheses",
+        "misconceptions",
+        "intent",
+        "constraints",
+        "acceptance_criteria",
+        "next_action",
+        "decisions",
+        "failed_approaches",
+        "open_questions",
+        "difficulty_evidence",
+        "workflow_position",
+        "full_answer_requested",
+        "prediction_pending",
+        "checkpoint"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "project_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "objective": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "active",
+            "closed"
+          ]
+        },
+        "bypass": {
+          "type": "boolean"
+        },
+        "explicit_learning": {
+          "type": "boolean"
+        },
+        "hint_level": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "attempts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "predictions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "hypotheses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "misconceptions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "intent": {
+          "enum": [
+            "learn",
+            "hint",
+            "debug",
+            "review",
+            "design",
+            "recall",
+            "compact",
+            "comprehension",
+            "conceptual-inquiry",
+            "artifact-critique",
+            "teach-back",
+            "contract-design",
+            "tradeoff-design"
+          ]
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "next_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "choice",
+              "reason",
+              "source_ids"
+            ],
+            "properties": {
+              "choice": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "failed_approaches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "attempt",
+              "observation",
+              "explanation",
+              "unresolved"
+            ],
+            "properties": {
+              "attempt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "observation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "unresolved": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "open_questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "unknown",
+              "why",
+              "evidence_needed"
+            ],
+            "properties": {
+              "unknown": {
+                "type": "string",
+                "minLength": 1
+              },
+              "why": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidence_needed": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "difficulty_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "workflow_position": {
+          "type": "string",
+          "minLength": 1
+        },
+        "full_answer_requested": {
+          "type": "boolean"
+        },
+        "prediction_pending": {
+          "type": "boolean"
+        },
+        "checkpoint": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "revision",
+                "sha256"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "revision": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

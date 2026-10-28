@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "integrations": {
+    "rtk": {
+      "kind": "executable",
+      "executable": "rtk",
+      "version_args": [
+        "--version"
+      ],
+      "source": "https://github.com/rtk-ai/rtk",
+      "optional": true,
+      "raw_recovery": "saved_output_or_safe_read_only_rerun",
+      "automatic_install": false
+    },
+    "graphify": {
+      "kind": "executable",
+      "executable": "graphify",
+      "version_args": [
+        "--version"
+      ],
+      "source": "https://github.com/Graphify-Labs/graphify",
+      "optional": true,
+      "semantic_indexing": "separate_authorization",
+      "automatic_install": false
+    },
+    "context7": {
+      "kind": "mcp",
+      "executable": null,
+      "version_args": [],
+      "source": "https://github.com/upstash/context7",
+      "optional": true,
+      "connectivity": "unverified",
+      "automatic_install": false
+    },
+    "context-mode": {
+      "kind": "mcp",
+      "executable": null,
+      "version_args": [],
+      "source": "https://github.com/mksglu/context-mode",
+      "optional": true,
+      "license": "ELv2-source-available",
+      "bundled": false,
+      "automatic_install": false
+    }
+  }
+}

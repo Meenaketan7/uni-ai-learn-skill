@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "profiles": {
+    "codex": {
+      "descriptor": "adapters/codex/adapter.json",
+      "renderer": "adapters/codex/render.py"
+    },
+    "claude-code": {
+      "descriptor": "adapters/claude-code/adapter.json",
+      "renderer": "adapters/claude-code/render.py"
+    },
+    "copilot-vscode": {
+      "descriptor": "adapters/copilot/vscode/adapter.json",
+      "renderer": "adapters/copilot/vscode/render.py"
+    },
+    "copilot-cli": {
+      "descriptor": "adapters/copilot/cli/adapter.json",
+      "renderer": "adapters/copilot/cli/render.py"
+    },
+    "cursor": {
+      "descriptor": "adapters/cursor/adapter.json",
+      "renderer": "adapters/cursor/render.py"
+    },
+    "opencode": {
+      "descriptor": "adapters/opencode/adapter.json",
+      "renderer": "adapters/opencode/render.py"
+    },
+    "antigravity": {
+      "descriptor": "adapters/antigravity/adapter.json",
+      "renderer": "adapters/antigravity/render.py"
+    },
+    "gemini-cli": {
+      "descriptor": "adapters/gemini-cli/adapter.json",
+      "renderer": "adapters/gemini-cli/render.py"
+    },
+    "kimi-code": {
+      "descriptor": "adapters/kimi-code/adapter.json",
+      "renderer": "adapters/kimi-code/render.py"
+    },
+    "windsurf": {
+      "descriptor": "adapters/windsurf/adapter.json",
+      "renderer": "adapters/windsurf/render.py"
+    },
+    "cline": {
+      "descriptor": "adapters/cline/adapter.json",
+      "renderer": "adapters/cline/render.py"
+    },
+    "aider": {
+      "descriptor": "adapters/aider/adapter.json",
+      "renderer": "adapters/aider/render.py"
+    }
+  }
+}

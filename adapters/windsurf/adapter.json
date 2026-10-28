@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "profile": "windsurf",
+  "display_name": "Devin Desktop",
+  "tier": 2,
+  "executable": "windsurf",
+  "version_args": [
+    "--version"
+  ],
+  "capabilities": {
+    "activation": "dispatcher",
+    "mode_refresh": "instruction_following",
+    "model_control": "manual_selection",
+    "subagent_selection": false,
+    "session_switch": false,
+    "compaction": {
+      "strategy": "fresh_session",
+      "native_command": null,
+      "execution": "user"
+    },
+    "live_tested": false,
+    "instruction_budget": "unverified",
+    "mcp_configuration": "manual_only"
+  },
+  "files": [
+    {
+      "path": ".devin/skills/learn/SKILL.md",
+      "template": "adapters/windsurf/templates/command.md",
+      "mode": "command",
+      "command": "learn"
+    },
+    {
+      "path": ".devin/skills/learn-hint/SKILL.md",
+      "template": "adapters/windsurf/templates/command.md",
+      "mode": "command",
+      "command": "learn-hint"
+    },
+    {
+      "path": ".devin/skills/learn-debug/SKILL.md",
+      "template": "adapters/windsurf/templates/command.md",
+      "mode": "command",
+      "command": "learn-debug"
+    },
+    {
+      "path": ".devin/skills/learn-review/SKILL.md",
+      "template": "adapters/windsurf/templates/command.md",
+      "mode": "command",
+      "command": "learn-review"
+    },
+    {
+      "path": ".devin/skills/learn-design/SKILL.md",
+      "template": "adapters/windsurf/templates/command.md",
+      "mode": "command",
+      "command": "learn-design"
+    },
+    {
+      "path": ".devin/skills/learn-recall/SKILL.md",
+      "template": "adapters/windsurf/templates/command.md",
+      "mode": "command",
+      "command": "learn-recall"
+    },
+    {
+      "path": ".devin/skills/learn-compact/SKILL.md",
+      "template": "adapters/windsurf/templates/command.md",
+      "mode": "command",
+      "command": "learn-compact"
+    },
+    {
+      "path": ".devin/rules/uni-learn.md",
+      "template": "adapters/windsurf/templates/entry.md",
+      "mode": "persistent"
+    }
+  ],
+  "commands": {
+    "learn": {
+      "invocation": "/learn",
+      "path": ".devin/skills/learn/SKILL.md"
+    },
+    "learn-hint": {
+      "invocation": "/learn-hint",
+      "path": ".devin/skills/learn-hint/SKILL.md"
+    },
+    "learn-debug": {
+      "invocation": "/learn-debug",
+      "path": ".devin/skills/learn-debug/SKILL.md"
+    },
+    "learn-review": {
+      "invocation": "/learn-review",
+      "path": ".devin/skills/learn-review/SKILL.md"
+    },
+    "learn-design": {
+      "invocation": "/learn-design",
+      "path": ".devin/skills/learn-design/SKILL.md"
+    },
+    "learn-recall": {
+      "invocation": "/learn-recall",
+      "path": ".devin/skills/learn-recall/SKILL.md"
+    },
+    "learn-compact": {
+      "invocation": "/learn-compact",
+      "path": ".devin/skills/learn-compact/SKILL.md"
+    }
+  },
+  "warnings": [
+    "Require explicit devin-desktop generation confirmation. Legacy Windsurf Cascade uses different skill invocation and is outside this profile.",
+    "Native command loading and model behavior depend on the installed host version."
+  ],
+  "required_generation": "devin-desktop"
+}
