@@ -140,12 +140,13 @@ class DryRunTests(InstallFixture, unittest.TestCase):
         self.assertNotIn("<!--", header)
         self.assertIn("<!-- uni-learn:cursor -->", body)
         entry.parent.mkdir(parents=True)
-        entry.write_text(header + "\n---\n" + "User rule: preserve this.\n" + body)
+        original = (header + "\n---\n" + "User rule: preserve this.\n" + body).encode("utf-8")
+        entry.write_bytes(original)
         repeated = self.plan("cursor")["manual_patches"][0]["content"]
         self.assertTrue(repeated.startswith(header + "\n---\n"))
         self.assertEqual(repeated.count("<!-- uni-learn:cursor -->"), 1)
         self.assertIn("User rule: preserve this.", repeated)
-        self.assertEqual(entry.read_text(), header + "\n---\n" + "User rule: preserve this.\n" + body)
+        self.assertEqual(entry.read_bytes(), original)
 
     def test_incompatible_cursor_frontmatter_requires_manual_merge(self):
         entry = self.project / ".cursor/rules/uni-learn.mdc"
@@ -545,9 +546,10 @@ class AutomaticSetupTests(InstallFixture, unittest.TestCase):
         foreign = home / ".agents/skills/custom/SKILL.md"
         foreign.parent.mkdir(parents=True)
         foreign.write_text("---\nname: learn-hint\n---\nMine.\n")
-        with self.assertRaisesRegex(ConflictError, "custom/SKILL.md"):
+        with self.assertRaises(ConflictError) as caught:
             install.setup("codex", application_roots=self.roots,
                           user_home=home, codex_home=codex_home)
+        self.assertIn(str(foreign), str(caught.exception))
         self.assertEqual(foreign.read_text(), "---\nname: learn-hint\n---\nMine.\n")
         self.assertFalse((codex_home / "AGENTS.md").exists())
         self.assertFalse(self.roots["data"].exists())
